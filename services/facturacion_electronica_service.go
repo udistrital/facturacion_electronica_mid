@@ -17,6 +17,51 @@ import (
 	"github.com/udistrital/utils_oas/requestresponse"
 )
 
+func ObtenerRegistrosTercerosPago() requestresponse.APIResponse {
+	var tercerosPagoResponse map[string]interface{}
+	url := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
+
+	if err := request.GetJsonWSO2(url, &tercerosPagoResponse); err != nil {
+		logs.Info("URL completa: %s", url)
+		logs.Error("Error al obtener terceros pago: %v", err)
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  http.StatusNotFound,
+			Message: "Error al obtener los datos: " + err.Error(),
+			Data:    nil,
+		}
+	}
+
+	return requestresponse.APIResponse{
+		Success: true,
+		Status:  http.StatusOK,
+		Message: "Datos obtenidos correctamente",
+		Data:    tercerosPagoResponse,
+	}
+}
+
+func ObtenerTerceroPago(id, anio string) requestresponse.APIResponse {
+	var terceroPagoResponse map[string]interface{}
+	url := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id + "/" + anio
+
+	if err := request.GetJsonWSO2(url, &terceroPagoResponse); err != nil {
+		logs.Error("Error al obtener tercero pago %s/%s: %v", id, anio, err)
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  http.StatusNotFound,
+			Message: "Error al obtener el registro: " + err.Error(),
+			Data:    nil,
+		}
+	}
+
+	return requestresponse.APIResponse{
+		Success: true,
+		Status:  http.StatusOK,
+		Message: "Registro obtenido correctamente",
+		Data:    terceroPagoResponse,
+	}
+}
+
 func GuardarDatosTerceroPago(terceroPago models.TerceroPagoRequest, tipoUsuario int, idTipoDocumentoDuenoRecibo int, terceroDuenoId int) requestresponse.APIResponse {
 	/* Tipos usuario
 	1: aspirante
@@ -67,7 +112,7 @@ func GuardarDatosTerceroPago(terceroPago models.TerceroPagoRequest, tipoUsuario 
 	}
 
 	// 5. Crear un array de TerceroPago, uno por cada dato adicional, y enviarlos a ACTERCERO_PAGO
-	serviceActerceroUrl := "http://" + beego.AppConfig.String("FacturacionElectronicaService")
+	serviceActerceroUrl := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
 	var respuestas []interface{}
 	var errores []string
 
@@ -417,6 +462,77 @@ func enviarTerceroOra(terceroPago models.TerceroPagoRequest, serviceURL string) 
 
 	default: // Cualquier otro código (>=300) es un error
 		return nil, fmt.Errorf("error wso2: servicio externo retornó código de error: %d", statusCode)
+	}
+}
+
+// ActualizarDatosTerceroPago envía la solicitud PUT hacia ACTERCERO_PAGO y estandariza la respuesta
+func ActualizarDatosTerceroPago(id string, requestBody []byte) requestresponse.APIResponse {
+	if id == "" {
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  http.StatusBadRequest,
+			Message: "Error: Falta el ID del registro en la URL.",
+			Data:    nil,
+		}
+	}
+
+	var inputData map[string]interface{}
+	if err := json.Unmarshal(requestBody, &inputData); err != nil {
+		logs.Error("Error al parsear JSON de entrada para PUT: %v", err)
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  http.StatusBadRequest,
+			Message: "Error en el formato JSON de la solicitud: " + err.Error(),
+			Data:    nil,
+		}
+	}
+
+	serviceURL := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id
+	req := httplib.Put(serviceURL)
+	req.Header("Content-Type", "application/json")
+	req.Header("Accept", "application/json")
+	req.JSONBody(inputData)
+
+	resp, err := req.Response()
+	if err != nil {
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  http.StatusServiceUnavailable,
+			Message: "Error de comunicación con el servicio externo: " + err.Error(),
+			Data:    nil,
+		}
+	}
+	defer resp.Body.Close()
+
+	switch resp.StatusCode {
+	case http.StatusAccepted:
+		return requestresponse.APIResponse{
+			Success: true,
+			Status:  http.StatusAccepted,
+			Message: "Solicitud de actualización aceptada para procesamiento.",
+			Data:    nil,
+		}
+	case http.StatusOK:
+		return requestresponse.APIResponse{
+			Success: true,
+			Status:  http.StatusOK,
+			Message: "Registro actualizado correctamente por el servicio externo (200 OK).",
+			Data:    nil,
+		}
+	case http.StatusNoContent:
+		return requestresponse.APIResponse{
+			Success: true,
+			Status:  http.StatusNoContent,
+			Message: "Registro actualizado correctamente (sin contenido).",
+			Data:    nil,
+		}
+	default:
+		return requestresponse.APIResponse{
+			Success: false,
+			Status:  resp.StatusCode,
+			Message: "Error reportado por el servicio externo durante la actualización.",
+			Data:    nil,
+		}
 	}
 }
 

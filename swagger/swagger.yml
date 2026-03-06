@@ -11,12 +11,12 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
-  /facturacion_electronica/:
+  /tercero_pago/:
     get:
       tags:
-      - facturacion_electronica
+      - tercero_pago
       description: Obtiene todos los registros
-      operationId: FacturacionElectronicaController.GetAll
+      operationId: TerceroPagoController.GetAll
       responses:
         "200":
           description: ""
@@ -28,9 +28,9 @@ paths:
           description: No se encontraron registros
     post:
       tags:
-      - facturacion_electronica
+      - tercero_pago
       description: Inserta un nuevo registro enviándolo al servicio JBPM
-      operationId: FacturacionElectronicaController.Post
+      operationId: TerceroPagoController.Post
       parameters:
       - in: body
         name: body
@@ -53,12 +53,12 @@ paths:
           description: '{object} map[string]interface{} "Error interno del servidor o error inesperado del servicio externo"'
         default:
           description: '{object} map[string]interface{} "Respuesta de error del servicio externo"'
-  /facturacion_electronica/{id}:
+  /tercero_pago/{id}:
     put:
       tags:
-      - facturacion_electronica
+      - tercero_pago
       description: Actualiza un registro existente enviando los datos al servicio JBPM
-      operationId: FacturacionElectronicaController.Put
+      operationId: TerceroPagoController.Put
       parameters:
       - in: path
         name: id
@@ -92,12 +92,12 @@ paths:
           description: '{object} map[string]interface{} "Error interno del servidor o error inesperado del servicio externo"'
         default:
           description: '{object} map[string]interface{} "Respuesta de error del servicio externo"'
-  /facturacion_electronica/{id}/{anio}:
+  /tercero_pago/{id}/{anio}:
     get:
       tags:
-      - facturacion_electronica
+      - tercero_pago
       description: Obtiene un registro por su ID y año
-      operationId: FacturacionElectronicaController.GetOne
+      operationId: TerceroPagoController.GetOne
       parameters:
       - in: path
         name: id

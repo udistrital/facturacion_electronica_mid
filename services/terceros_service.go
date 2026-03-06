@@ -12,7 +12,7 @@ func ObtenerDuenoReciboTerceros(terceroDuenoId int) (models.TerceroId, error) {
 
 	var terceroDuenoData models.TerceroId
 
-	url := "http://" + beego.AppConfig.String("TercerosService") + fmt.Sprintf("/tercero/%d", terceroDuenoId)
+	url := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("TercerosService") + fmt.Sprintf("/tercero/%d", terceroDuenoId)
 
 	err := request.GetJson(url, &terceroDuenoData)
 	if err != nil {
