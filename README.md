@@ -8,7 +8,6 @@ API MID para la gestion/requerimientos asociados a temas de facturacion electron
 * [Golang](https://github.com/udistrital/introduccion_oas/blob/master/instalacion_de_herramientas/golang.md)
 * [BeeGo](https://github.com/udistrital/introduccion_oas/blob/master/instalacion_de_herramientas/beego.md)
 * [Docker](https://docs.docker.com/engine/install/ubuntu/)
-* [Docker Compose](https://docs.docker.com/compose/)
 
 ### Variables de Entorno
 ```shell
