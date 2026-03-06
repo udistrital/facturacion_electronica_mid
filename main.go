@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "facturacion_electronica_mid/routers"
+	_ "github.com/udistrital/facturacion_electronica_mid/routers"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"

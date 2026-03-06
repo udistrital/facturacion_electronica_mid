@@ -8,21 +8,16 @@
 package routers
 
 import (
-	"facturacion_electronica_mid/controllers"
+	"github.com/udistrital/facturacion_electronica_mid/controllers"
 
 	"github.com/astaxie/beego"
 )
 
 func init() {
 	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/object",
+		beego.NSNamespace("/facturacion_electronica",
 			beego.NSInclude(
-				&controllers.ObjectController{},
-			),
-		),
-		beego.NSNamespace("/user",
-			beego.NSInclude(
-				&controllers.UserController{},
+				&controllers.FacturacionElectronicaController{},
 			),
 		),
 	)

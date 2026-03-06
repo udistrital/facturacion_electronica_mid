@@ -1,0 +1,184 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "beego Test API",
+        "description": "beego has a very cool tools to autogenerate documents for your API",
+        "version": "1.0.0",
+        "termsOfService": "http://beego.me/",
+        "contact": {
+            "email": "astaxie@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/facturacion_electronica/": {
+            "get": {
+                "tags": [
+                    "facturacion_electronica"
+                ],
+                "description": "Obtiene todos los registros",
+                "operationId": "FacturacionElectronicaController.GetAll",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/map[string]interface{}"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontraron registros"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "facturacion_electronica"
+                ],
+                "description": "Inserta un nuevo registro enviándolo al servicio JBPM",
+                "operationId": "FacturacionElectronicaController.Post",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Datos del registro a crear. Debe coincidir con la estructura esperada por el servicio externo, ej: {'_posttercero_pago': {...}}",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "\"Registro creado y confirmado por el servicio externo (respuesta del servicio externo)\"",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "202": {
+                        "description": "\"Solicitud aceptada para procesamiento por el servicio externo (usualmente sin cuerpo de respuesta)\"",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "400": {
+                        "description": "{object} map[string]interface{} \"Error en los datos de entrada\""
+                    },
+                    "500": {
+                        "description": "{object} map[string]interface{} \"Error interno del servidor o error inesperado del servicio externo\""
+                    },
+                    "default": {
+                        "description": "{object} map[string]interface{} \"Respuesta de error del servicio externo\""
+                    }
+                }
+            }
+        },
+        "/facturacion_electronica/{id}": {
+            "put": {
+                "tags": [
+                    "facturacion_electronica"
+                ],
+                "description": "Actualiza un registro existente enviando los datos al servicio JBPM",
+                "operationId": "FacturacionElectronicaController.Put",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID del registro a actualizar",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Datos del registro a actualizar. Debe coincidir con la estructura esperada por el servicio externo.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\"Registro actualizado correctamente (respuesta opcional del servicio externo, usualmente vacía)\"",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "202": {
+                        "description": "\"Solicitud de actualización aceptada para procesamiento por el servicio externo (sin cuerpo de respuesta)\"",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "204": {
+                        "description": "\"Registro actualizado correctamente (sin cuerpo de respuesta)\"",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "400": {
+                        "description": "{object} map[string]interface{} \"Error en los datos de entrada o ID inválido\""
+                    },
+                    "404": {
+                        "description": "{object} map[string]interface{} \"Registro no encontrado (si el servicio externo lo indica)\""
+                    },
+                    "500": {
+                        "description": "{object} map[string]interface{} \"Error interno del servidor o error inesperado del servicio externo\""
+                    },
+                    "default": {
+                        "description": "{object} map[string]interface{} \"Respuesta de error del servicio externo\""
+                    }
+                }
+            }
+        },
+        "/facturacion_electronica/{id}/{anio}": {
+            "get": {
+                "tags": [
+                    "facturacion_electronica"
+                ],
+                "description": "Obtiene un registro por su ID y año",
+                "operationId": "FacturacionElectronicaController.GetOne",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID del registro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "anio",
+                        "description": "Año de consulta",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/map[string]interface{}"
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró el registro"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "map[string]interface{}": {
+            "title": "map[string]interface{}",
+            "type": "object"
+        }
+    }
+}

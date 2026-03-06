@@ -1,12 +1,13 @@
 package test
 
 import (
-	_ "facturacion_electronica_mid/routers"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	_ "github.com/udistrital/facturacion_electronica_mid/routers"
 
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
