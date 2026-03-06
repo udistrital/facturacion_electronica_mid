@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"facturacion_electronica_mid/models"
 	"encoding/json"
+	"facturacion_electronica_mid/models"
 
 	"github.com/astaxie/beego"
 )
@@ -89,4 +89,3 @@ func (o *ObjectController) Delete() {
 	o.Data["json"] = "delete success!"
 	o.ServeJSON()
 }
-

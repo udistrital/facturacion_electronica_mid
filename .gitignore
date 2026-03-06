@@ -1,0 +1,10 @@
+lastupdate.tmp
+.vscode/
+titan_api_crud
+main
+.scannerwork/
+swagger/**
+!swagger/swagger.json
+!swagger/swagger.yml
+*.env
+!example.env

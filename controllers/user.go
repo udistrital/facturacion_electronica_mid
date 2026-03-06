@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"facturacion_electronica_mid/models"
 	"encoding/json"
+	"facturacion_electronica_mid/models"
 
 	"github.com/astaxie/beego"
 )
@@ -116,4 +116,3 @@ func (u *UserController) Logout() {
 	u.Data["json"] = "logout success"
 	u.ServeJSON()
 }
-
