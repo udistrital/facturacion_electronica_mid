@@ -1,0 +1,10 @@
+lastupdate.tmp
+.vscode/
+facturacion_electronica_mid
+main
+.scannerwork/
+swagger/**
+!swagger/swagger.json
+!swagger/swagger.yml
+*.env
+!example.env
