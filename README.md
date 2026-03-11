@@ -1,4 +1,4 @@
-# Facturacion Electronica MID
+# Facturacion Electronica MID 
 
 API MID para la gestion/requerimientos asociados a temas de facturacion electronica.
 
@@ -18,7 +18,7 @@ export FACTURACION_ELECTRONICA_MID_TERCEROS_SERVICE=
 export FACTURACION_ELECTRONICA_MID_BUSSERVICIOS_WSO2_SERVICE=
 export FACTURACION_ELECTRONICA_MID_WSO2_TERCERO_PAGO_PATH=
 export FACTURACION_ELECTRONICA_MID_CONSULTAR_RECIBO_PATH=
-export FACTURACION_ELECTRONICA_MID_SOFIA_SERVICE=
+export FACTURACION_ELECTRONICA_MID_SOFIA_SERVICE= 
 
 ```
 **NOTA:** Las variables se pueden ver en el fichero conf/app.conf.
