@@ -1,11 +1,11 @@
 module github.com/udistrital/facturacion_electronica_mid
 
-go 1.26.1
+go 1.25
 
 require (
 	github.com/astaxie/beego v1.12.3
 	github.com/smartystreets/goconvey v1.8.1
-	github.com/udistrital/utils_oas v0.4.1
+	github.com/udistrital/utils_oas v0.4.2
 )
 
 require (
