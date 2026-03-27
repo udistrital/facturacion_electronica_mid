@@ -238,7 +238,7 @@ func GenerarDatosSofia(terceroPago models.TerceroPago, duenoRecibo models.DuenoR
 
 func obtenerNombresDueno(terceroDuenoId int) (terceroDuenoData models.TerceroId, err error) {
 
-	url := "http://" + beego.AppConfig.String("TercerosService") + fmt.Sprintf("/tercero/%d", terceroDuenoId)
+	url := beego.AppConfig.String("TercerosService") + fmt.Sprintf("/tercero/%d", terceroDuenoId)
 
 	err = request.GetJson(url, &terceroDuenoData)
 	if err != nil {
