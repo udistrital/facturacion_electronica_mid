@@ -19,7 +19,7 @@ import (
 
 func ObtenerRegistrosTercerosPago() requestresponse.APIResponse {
 	var tercerosPagoResponse map[string]interface{}
-	url := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
+	url := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
 
 	if err := request.GetJsonWSO2(url, &tercerosPagoResponse); err != nil {
 		logs.Info("URL completa: %s", url)
@@ -42,7 +42,7 @@ func ObtenerRegistrosTercerosPago() requestresponse.APIResponse {
 
 func ObtenerTerceroPago(id, anio string) requestresponse.APIResponse {
 	var terceroPagoResponse map[string]interface{}
-	url := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id + "/" + anio
+	url := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id + "/" + anio
 
 	if err := request.GetJsonWSO2(url, &terceroPagoResponse); err != nil {
 		logs.Error("Error al obtener tercero pago %s/%s: %v", id, anio, err)
@@ -112,7 +112,7 @@ func GuardarDatosTerceroPago(terceroPago models.TerceroPagoRequest, tipoUsuario 
 	}
 
 	// 5. Crear un array de TerceroPago, uno por cada dato adicional, y enviarlos a ACTERCERO_PAGO
-	serviceActerceroUrl := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
+	serviceActerceroUrl := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath")
 	var respuestas []interface{}
 	var errores []string
 
@@ -247,7 +247,7 @@ func obtenerDatosDuenoRecibo(terceroPago models.TerceroPagoRequest, tipoUsuario 
 	// Consulta a servicio de recibos para obtener los datos del dueno del recibo
 
 	var duenoResponse models.DuenoReciboResponse
-	urlDueno := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("ConsultarReciboPath") + "datos_recibo/" + tipoDocumento + "/" + strconv.Itoa(tipoUsuario) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA)
+	urlDueno := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("ConsultarReciboPath") + "datos_recibo/" + tipoDocumento + "/" + strconv.Itoa(tipoUsuario) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA)
 
 	if err := request.GetJsonWSO2(urlDueno, &duenoResponse); err != nil {
 		logs.Error("No se pudo obtener los datos del dueno del recibo %s / %s: %v", strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA), strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO), err)
@@ -265,7 +265,7 @@ func obtenerDatosDuenoRecibo(terceroPago models.TerceroPagoRequest, tipoUsuario 
 func obtenerDatosConceptosRecibo(terceroPago models.TerceroPagoRequest, tipoUsuario int) ([]models.ConceptoRecibo, error) {
 	// Consulta a servicio de recibos para obtener los conceptos de un recibo
 	var conceptosResponse models.ConceptosReciboResponse
-	urlConceptos := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("ConsultarReciboPath") + "datos_conceptos_recibo/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA) + "/" + strconv.Itoa(tipoUsuario)
+	urlConceptos := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("ConsultarReciboPath") + "datos_conceptos_recibo/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO) + "/" + strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA) + "/" + strconv.Itoa(tipoUsuario)
 
 	if err := request.GetJsonWSO2(urlConceptos, &conceptosResponse); err != nil {
 		logs.Error("No se pudo obtener los conceptos del recibo %s / %s: %v", strconv.Itoa(terceroPago.PostTerceroPago.TERPA_SECUENCIA), strconv.Itoa(terceroPago.PostTerceroPago.TERPA_ANO_PAGO), err)
@@ -487,7 +487,7 @@ func ActualizarDatosTerceroPago(id string, requestBody []byte) requestresponse.A
 		}
 	}
 
-	serviceURL := beego.AppConfig.String("ProtocolAdmin") + "://" + beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id
+	serviceURL := beego.AppConfig.String("BusserviciosBasePath") + beego.AppConfig.String("TerceroPagoPath") + "/" + id
 	req := httplib.Put(serviceURL)
 	req.Header("Content-Type", "application/json")
 	req.Header("Accept", "application/json")
