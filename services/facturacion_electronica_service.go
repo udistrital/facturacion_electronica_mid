@@ -313,14 +313,13 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 	// Enviar la solicitud HTTP pagador y guardado de la respuesta
 	responsePagador, err := client.Do(requestPagador)
 	if err != nil {
+		logs.Error("Error al enviar la solicitud HTTP pagador a Sofia (%s): %v", urlSofia, err)
 		respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 			Success: false,
-			Status:  responsePagador.StatusCode,
+			Status:  http.StatusServiceUnavailable,
 			Message: "respSofiaTerceroP",
 			Data:    "",
 		})
-		logs.Error("Error al enviar la solicitud HTTP dueno recibo: %v", err)
-		// return nil, err
 	} else {
 		respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 			Success: true,
@@ -328,8 +327,8 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 			Message: "respSofiaTerceroP",
 			Data:    responsePagador.Body,
 		})
+		defer responsePagador.Body.Close()
 	}
-	defer responsePagador.Body.Close()
 
 	// DUENO
 	jsonDataTerceroD, err := json.Marshal(datosSofiaPost.TerceroD)
@@ -348,14 +347,13 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 	// Enviar la solicitud HTTP dueno recibo y guardado de la respuesta
 	responseDueno, err := client.Do(requestDueno)
 	if err != nil {
+		logs.Error("Error al enviar la solicitud HTTP dueño a Sofia (%s): %v", urlSofia, err)
 		respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 			Success: false,
-			Status:  responseDueno.StatusCode,
+			Status:  http.StatusServiceUnavailable,
 			Message: "respSofiaTerceroD",
 			Data:    "",
 		})
-		logs.Error("Error al enviar la solicitud HTTP dueno recibo: %v", err)
-		// return nil, err
 	} else {
 		respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 			Success: true,
@@ -363,8 +361,8 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 			Message: "respSofiaTerceroD",
 			Data:    responseDueno.Body,
 		})
+		defer responseDueno.Body.Close()
 	}
-	defer responseDueno.Body.Close()
 
 	// CONCEPTOS
 	for i, concepto := range datosSofiaPost.ConceptoList {
@@ -385,14 +383,13 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 		// Enviar la solicitud HTTP dueno recibo y guardado de la respuesta
 		responseConcepto, err := client.Do(requestConcepto)
 		if err != nil {
+			logs.Error("Error al enviar la solicitud HTTP concepto %d a Sofia (%s): %v", i+1, urlSofia, err)
 			respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 				Success: false,
-				Status:  responseConcepto.StatusCode,
-				Message: fmt.Sprintf("respSofiaTerceroConcepto %d", i+1),
+				Status:  http.StatusServiceUnavailable,
+				Message: fmt.Sprintf("respSofiaConcepto%d", i+1),
 				Data:    "",
 			})
-			logs.Error("Error al enviar la solicitud HTTP dueno recibo: %v", err)
-			// return nil, err
 		} else {
 			respuestasERP = append(respuestasERP, requestresponse.APIResponse{
 				Success: true,
@@ -400,8 +397,8 @@ func enviarDatosSofia(pagador models.TerceroPago, dueno models.DuenoRecibo, conc
 				Message: fmt.Sprintf("respSofiaConcepto%d", i+1),
 				Data:    responseConcepto.Body,
 			})
+			defer responseConcepto.Body.Close()
 		}
-		defer responseConcepto.Body.Close()
 	}
 
 	return respuestasERP, nil

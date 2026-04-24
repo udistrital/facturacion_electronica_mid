@@ -11,6 +11,21 @@ import (
 	"github.com/udistrital/utils_oas/time_bogota"
 )
 
+func parseStringIntOrZero(value string, fieldName string) int {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return 0
+	}
+
+	parsedValue, err := strconv.Atoi(value)
+	if err != nil {
+		beego.Error("Error convirtiendo "+fieldName+" a int:", err)
+		return 0
+	}
+
+	return parsedValue
+}
+
 func GenerarDatosSofia(terceroPago models.TerceroPago, duenoRecibo models.DuenoRecibo, conceptos []models.ConceptoRecibo, terceroDuenoId int) (sofiaTerceroD models.DatosSofiaDueno, sofiaTerceroP models.DatosSofiaPagador, sofiaTerceroConceptos []models.DatosSofiaConcepto, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -182,51 +197,15 @@ func GenerarDatosSofia(terceroPago models.TerceroPago, duenoRecibo models.DuenoR
 		SofiaTerceroConcepto["campo7"] = terceroPago.TERPA_NRO_DOCUMENTO
 		SofiaTerceroConcepto["campo8"] = valorTotalConceptos
 		SofiaTerceroConcepto["campo9"] = i + 1 // Número secuencial del concepto
-		val10, errConv10 := strconv.Atoi(concepto.CodConcepto)
-		if errConv10 != nil {
-			beego.Error("Error convirtiendo concepto.CodConcepto a int:", errConv10)
-			SofiaTerceroConcepto["campo10"] = 0
-		} else {
-			SofiaTerceroConcepto["campo10"] = val10
-		}
-		val11, errConv := strconv.Atoi(concepto.Concepto)
-		if errConv != nil {
-			beego.Error("Error convirtiendo concepto.Concepto a int:", errConv)
-			SofiaTerceroConcepto["campo11"] = 0
-		} else {
-			SofiaTerceroConcepto["campo11"] = val11
-		}
-		val12, errConv12 := strconv.Atoi(concepto.Valor)
-		if errConv12 != nil {
-			beego.Error("Error convirtiendo concepto.Valor a int:", errConv12)
-			SofiaTerceroConcepto["campo12"] = 0
-		} else {
-			SofiaTerceroConcepto["campo12"] = val12
-		}
+		SofiaTerceroConcepto["campo10"] = parseStringIntOrZero(concepto.CodConcepto, "concepto.CodConcepto")
+		SofiaTerceroConcepto["campo11"] = strings.TrimSpace(concepto.Concepto)
+		SofiaTerceroConcepto["campo12"] = parseStringIntOrZero(concepto.Valor, "concepto.Valor")
 		SofiaTerceroConcepto["campo13"] = len(conceptos)
-		val14, errConv14 := strconv.Atoi(duenoRecibo.CodCarrera)
-		if errConv14 != nil {
-			beego.Error("Error convirtiendo duenoRecibo.CodCarrera a int:", errConv14)
-			SofiaTerceroConcepto["campo14"] = 0
-		} else {
-			SofiaTerceroConcepto["campo14"] = val14
-		}
+		SofiaTerceroConcepto["campo14"] = parseStringIntOrZero(duenoRecibo.CodCarrera, "duenoRecibo.CodCarrera")
 		SofiaTerceroConcepto["campo15"] = duenoRecibo.Carrera
-		val16, errConv16 := strconv.Atoi(duenoRecibo.CodEstudiante)
-		if errConv16 != nil {
-			beego.Error("Error convirtiendo duenoRecibo.CodEstudiante a int:", errConv16)
-			SofiaTerceroConcepto["campo16"] = 0
-		} else {
-			SofiaTerceroConcepto["campo16"] = val16
-		}
+		SofiaTerceroConcepto["campo16"] = parseStringIntOrZero(duenoRecibo.CodEstudiante, "duenoRecibo.CodEstudiante")
 		SofiaTerceroConcepto["campo17"] = duenoRecibo.CodTipoIdentificacion
-		val18, errConv18 := strconv.Atoi(duenoRecibo.Identificacion)
-		if errConv18 != nil {
-			beego.Error("Error convirtiendo duenoRecibo.Identificacion a int:", errConv18)
-			SofiaTerceroConcepto["campo18"] = 0
-		} else {
-			SofiaTerceroConcepto["campo18"] = val18
-		}
+		SofiaTerceroConcepto["campo18"] = parseStringIntOrZero(duenoRecibo.Identificacion, "duenoRecibo.Identificacion")
 		SofiaTerceroConcepto["campo19"] = duenoRecibo.Nivel
 
 		sofiaTerceroConceptos = append(sofiaTerceroConceptos, SofiaTerceroConcepto)
